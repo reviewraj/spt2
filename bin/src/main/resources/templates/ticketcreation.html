@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>New Ticket Created</title>
+  <style type="text/css">
+    @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
+    body, html {
+      margin: 0;
+      padding: 0;
+      font-family: 'Open Sans', 'Segoe UI', Arial, sans-serif;
+      line-height: 1.6;
+      color: #333333;
+      background-color: #f7f9fc;
+    }
+    .container {
+      max-width: 600px;
+      margin: 20px auto;
+      background: #ffffff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+    .header {
+      background: linear-gradient(135deg, #007BFF 0%, #0056b3 100%);
+      padding: 30px 20px;
+      text-align: center;
+    }
+    .header h1 {
+      color: #ffffff;
+      margin: 0;
+      font-size: 24px;
+      font-weight: 700;
+    }
+    .content {
+      padding: 30px;
+    }
+    .ticket-info {
+      background-color: #f8f9fa;
+      border-radius: 6px;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+    .ticket-info p {
+      margin: 5px 0;
+    }
+    .priority-high {
+      color: #dc3545;
+      font-weight: 600;
+    }
+    .priority-medium {
+      color: #fd7e14;
+      font-weight: 600;
+    }
+    .priority-low {
+      color: #28a745;
+      font-weight: 600;
+    }
+    .button {
+      display: inline-block;
+      padding: 12px 24px;
+      background-color: #007BFF;
+      color: #ffffff !important;
+      text-decoration: none;
+      border-radius: 4px;
+      font-weight: 600;
+      margin: 15px 0;
+    }
+    .footer {
+      padding: 20px;
+      text-align: center;
+      font-size: 12px;
+      color: #888888;
+      border-top: 1px solid #eeeeee;
+    }
+    @media screen and (max-width: 600px) {
+      .container {
+        margin: 0;
+        border-radius: 0;
+      }
+      .content {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body style="margin:0; padding:0; background-color:#f7f9fc; font-family:'Open Sans', 'Segoe UI', Arial, sans-serif;">
+
+  <div class="container">
+    <div class="header">
+      <h1>New Ticket Created #<span th:text="${ticket.ticketId}">12345</span></h1>
+    </div>
+
+    <div class="content">
+      <h2 style="margin-top: 0; color: #2c3e50;">Hello <span th:text="${ticket.createdBy}">User</span>,</h2>
+      
+      <p style="font-size: 16px; color: #555555; margin-bottom: 25px;">
+        Thank you for submitting your ticket. Here are the details:
+      </p>
+
+      <div class="ticket-info">
+        <p style="margin: 5px 0;"><strong>Ticket ID:</strong> <span th:text="${ticket.ticketId}">12345</span></p>
+        <p style="margin: 5px 0;"><strong>Summary:</strong> <span th:text="${ticket.summaryOfIssue}">Issue summary</span></p>
+        <p style="margin: 5px 0;"><strong>Issue Type:</strong> <span th:text="${ticket.issueType}">Technical Support</span></p>
+        <p style="margin: 5px 0;"><strong>Priority:</strong> 
+          <span th:classappend="${ticket.priority == 'HIGH'} ? 'priority-high' : 
+                               (${ticket.priority == 'MEDIUM'} ? 'priority-medium' : 'priority-low')"
+                th:text="${ticket.priority}">Low</span>
+        </p>
+        <p style="margin: 5px 0;"><strong>Severity:</strong> <span th:text="${ticket.severity}">Minor</span></p>
+        <p style="margin: 5px 0;"><strong>Status:</strong> <span style="color: #6c757d;" th:text="${ticket.status}">Open</span></p>
+        <p style="margin: 5px 0;"><strong>Created:</strong> <span th:text="${#temporals.format(ticket.createdAt, 'dd MMM yyyy HH:mm')}">01 Jan 2023 10:00</span></p>
+        <p th:if="${ticket.assignedTo}" style="margin: 5px 0;">
+          <strong>Assigned To:</strong> <span th:text="${ticket.assignedTo.name}">Support Agent</span>
+        </p>
+      </div>
+
+      <h3 style="color: #2c3e50; margin-bottom: 10px;">Description:</h3>
+      <div style="background-color: #f8f9fa; border-left: 4px solid #007BFF; padding: 15px; margin: 20px 0; border-radius: 0 4px 4px 0;">
+        <p style="margin: 0;" th:text="${ticket.issueDescription}">Detailed description of the issue goes here.</p>
+      </div>
+
+      <div style="text-align: center; margin: 25px 0;">
+        <a th:href="${baseUrl} + '/tickets/' + ${ticket.ticketId}" class="button" style="color: #ffffff; text-decoration: none;">
+          View Ticket in Portal
+        </a>
+      </div>
+
+      <p style="font-size: 14px; color: #777777;">
+        We will review your ticket and get back to you soon. You can expect an update within 
+        <strong th:text="${ticket.priority == 'HIGH'} ? '2 business hours' : 
+                         (${ticket.priority == 'MEDIUM'} ? '24 hours' : '48 hours')">48 hours</strong>.
+      </p>
+    </div>
+
+    <div class="footer">
+      <p style="margin: 5px 0;">© 2025 Raj Solutions. All rights reserved.</p>
+      <p style="margin: 5px 0; font-size: 11px; color: #aaaaaa;">
+        This is an automated notification. Please do not reply to this email.
+      </p>
+      <p style="margin: 5px 0; font-size: 11px; color: #aaaaaa;">
+        Ticket Reference: <span th:text="${ticket.ticketId}">12345</span>
+      </p>
+    </div>
+  </div>
+
+</body>
+</html>

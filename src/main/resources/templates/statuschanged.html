@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ticket Status Update</title>
+  <style type="text/css">
+    @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap');
+    body, html {
+      margin: 0;
+      padding: 0;
+      font-family: 'Open Sans', 'Segoe UI', Arial, sans-serif;
+      line-height: 1.6;
+      color: #333333;
+      background-color: #f7f9fc;
+    }
+    .container {
+      max-width: 600px;
+      margin: 20px auto;
+      background: #ffffff;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+    .header {
+      background: linear-gradient(135deg, #007BFF 0%, #0056b3 100%);
+      padding: 30px 20px;
+      text-align: center;
+    }
+    .header h1 {
+      color: #ffffff;
+      margin: 0;
+      font-size: 24px;
+      font-weight: 700;
+    }
+    .content {
+      padding: 30px;
+    }
+    .ticket-info {
+      background-color: #f8f9fa;
+      border-radius: 6px;
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+    .status-change {
+      background-color: #e7f5ff;
+      border-left: 4px solid #007BFF;
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 0 4px 4px 0;
+    }
+    .status-new {
+      color: #28a745;
+      font-weight: 600;
+    }
+    .status-pending {
+      color: #fd7e14;
+      font-weight: 600;
+    }
+    .status-resolved {
+      color: #6c757d;
+      font-weight: 600;
+    }
+    .status-closed {
+      color: #dc3545;
+      font-weight: 600;
+    }
+    .button {
+      display: inline-block;
+      padding: 12px 24px;
+      background-color: #007BFF;
+      color: #ffffff !important;
+      text-decoration: none;
+      border-radius: 4px;
+      font-weight: 600;
+      margin: 15px 0;
+    }
+    .footer {
+      padding: 20px;
+      text-align: center;
+      font-size: 12px;
+      color: #888888;
+      border-top: 1px solid #eeeeee;
+    }
+    @media screen and (max-width: 600px) {
+      .container {
+        margin: 0;
+        border-radius: 0;
+      }
+      .content {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body style="margin:0; padding:0; background-color:#f7f9fc; font-family:'Open Sans', 'Segoe UI', Arial, sans-serif;">
+
+  <div class="container">
+    <div class="header">
+      <h1>Ticket Status Updated #<span th:text="${ticket.ticketId}">12345</span></h1>
+    </div>
+
+    <div class="content">
+      <h2 style="margin-top: 0; color: #2c3e50;">Hello <span th:text="${ticket.createdBy}">User</span>,</h2>
+      
+      <p style="font-size: 16px; color: #555555; margin-bottom: 25px;">
+        The status of your ticket has been updated:
+      </p>
+
+      <div class="ticket-info">
+        <p style="margin: 5px 0;"><strong>Ticket ID:</strong> <span th:text="${ticket.ticketId}">12345</span></p>
+        <p style="margin: 5px 0;"><strong>Summary:</strong> <span th:text="${ticket.summaryOfIssue}">Issue summary</span></p>
+        <p style="margin: 5px 0;"><strong>Previous Status:</strong> 
+          <span th:classappend="${previousStatus == 'OPEN'} ? 'status-pending' : 
+                               (${previousStatus == 'RESOLVED'} ? 'status-resolved' : 
+                               (${previousStatus == 'CLOSED'} ? 'status-closed' : 'status-new')"
+                th:text="${previousStatus}">Open</span>
+        </p>
+        <p style="margin: 5px 0;"><strong>New Status:</strong> 
+          <span th:classappend="${ticket.status == 'OPEN'} ? 'status-pending' : 
+                               (${ticket.status == 'RESOLVED'} ? 'status-resolved' : 
+                               (${ticket.status == 'CLOSED'} ? 'status-closed' : 'status-new')"
+                th:text="${ticket.status}">In Progress</span>
+        </p>
+        <p style="margin: 5px 0;"><strong>Updated By:</strong> <span th:text="${updatedBy}">Support Agent</span></p>
+        <p style="margin: 5px 0;"><strong>Updated At:</strong> <span th:text="${#temporals.format(ticket.updatedAt, 'dd MMM yyyy HH:mm')}">01 Jan 2023 14:30</span></p>
+      </div>
+
+      <div th:if="${statusComment}" class="status-change">
+        <h3 style="color: #2c3e50; margin-top: 0; margin-bottom: 10px;">Update Comment:</h3>
+        <p style="margin: 0;" th:text="${statusComment}">Additional comments about the status change.</p>
+      </div>
+
+      <div style="text-align: center; margin: 25px 0;">
+        <a th:href="${baseUrl} + '/tickets/' + ${ticket.ticketId}" class="button" style="color: #ffffff; text-decoration: none;">
+          View Ticket in Portal
+        </a>
+      </div>
+
+      <p style="font-size: 14px; color: #777777;">
+        <span th:if="${ticket.status == 'RESOLVED'}">
+          Please verify if your issue has been resolved. If not, you can reopen the ticket within 7 days.
+        </span>
+        <span th:if="${ticket.status == 'CLOSED'}">
+          This ticket has been closed. If you have further questions, please create a new ticket.
+        </span>
+        <span th:if="${ticket.status == 'OPEN'}">
+          Your ticket is being processed. We'll update you as soon as we have more information.
+        </span>
+      </p>
+    </div>
+
+    <div class="footer">
+      <p style="margin: 5px 0;">© 2025 Raj Solutions. All rights reserved.</p>
+      <p style="margin: 5px 0; font-size: 11px; color: #aaaaaa;">
+        This is an automated notification. Please do not reply to this email.
+      </p>
+    </div>
+  </div>
+
+</body>
+</html>

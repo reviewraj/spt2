@@ -1,0 +1,5 @@
+hi my name is nagaraju,im java developer having 3 years hands on experience on the build and maintaining the scable web applications by using by java ,spring framework,hibernate and rest apis iam closely 
+worked with both sql and no sql databases and also comfort with the tools like docker,git maven,kubernets and basic ci/cd  implementation 
+i was recently worked on project named dms(dealer management serveice).basically it is microservice serveice architechture project .and built for the auto mobile industry
+main aim of this  project is automate day to day tasks like ,managing the inventory ,sales records ,account, crms and services they offered 
+the major modules in that service,parts,warrenty,service and setting  in that some 
