@@ -33,7 +33,7 @@ jobs:
 
           restore-keys: ${{ runner.os }}-maven-
       - name: Rename application-template.properties to application.properties
-        run: mv src/main/resources/application -template src/main/resources/application.properties
+        run: mv src/main/resources/application-template src/main/resources/application.properties
  
       - name: Build JAR with Maven
 
