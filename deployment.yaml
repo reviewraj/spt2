@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: supportportal
+  labels:
+    app: spt2
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: spt2
+  template:
+    metadata:
+      labels:
+        app: spt2
+    spec:
+      containers:
+      - name: supportportal
+        image: nagaraju7876482/spt2:latest
+        ports:
+        - containerPort: 8080
+        env:
+        - name: spring.mail.password
+          valueFrom:
+            secretKeyRef:
+              name: spt2
+              key: gmail-secret
+        - name: spring.security.oauth2.client.registration.github.client-secret
+          valueFrom:
+            secretKeyRef:
+              name: spt2
+              key: github-secret
