@@ -84,7 +84,7 @@ public class JavaConfig {
 								"/swagger-ui.html",
 								"/swagger-ui/**",
 							    "/v3/api-docs/**",
-								"/supportDesk/v1/save").permitAll()
+								"/supportDesk/v1/save","/actuator/**").permitAll()
 						.requestMatchers(
 								"/supportDesk/v1/admin/**",
 								"/supportDesk/comment/v1/deleteComment",
