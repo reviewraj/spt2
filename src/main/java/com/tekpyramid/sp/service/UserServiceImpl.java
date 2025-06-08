@@ -65,7 +65,10 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public ResponseDto addUser(UserRequestDTO userRequestDTO) {
+		System.out.println("Checking if user exists with email: " + userRequestDTO.getEmail());
 		Optional<User> optionalUser = userRepository.findByEmail(userRequestDTO.getEmail());
+		System.out.println("User found? " + optionalUser.isPresent());
+
 		if (optionalUser.isEmpty()) {
 			User user = new User();
 			BeanUtils.copyProperties(userRequestDTO, user);
@@ -73,6 +76,7 @@ public class UserServiceImpl implements UserService {
 			user.setRole(role);
 			Privilege privilege = privilegeRepository.findByPrivilege("ROLE_CUSTOMER").get();
 			user.setPrivilege(privilege);
+			if (user.getPassword() != null) {
 		user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 		user.setCreatedBy(user.getEmail());
 			User save = userRepository.save(user);
@@ -94,8 +98,10 @@ public class UserServiceImpl implements UserService {
 			userReponseDto.setPrivilege(save.getPrivilege().getPrivilege());
 			return new ResponseDto(false, "usercreatedsuccessfully", userReponseDto);
 		}
-		throw new UserAlreadyExist("user is already exist with email :" + userRequestDTO.getEmail());
+		
 	}
+		return new ResponseDto(false, "usercreatedsuccessfully", null);
+		}
 
 	public ResponseDto update(UserRequestDTO userRequestDTO) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
